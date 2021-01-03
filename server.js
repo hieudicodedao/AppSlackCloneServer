@@ -7,7 +7,7 @@ var mongoose = require('mongoose')
 const http = require('http')
 const server = http.createServer(app)
 var bodyParser = require('body-parser')
-var port = 9999 || process.env.PORT
+var port = process.env.PORT || 9999
 
 const UserRoutes = require('./Routes/User')
 const ChannelRoutes = require('./Routes/Channel')
