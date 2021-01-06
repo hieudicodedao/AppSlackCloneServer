@@ -8,8 +8,8 @@ TopicRoutes.post('/', TopicController.getlisttopic)
 
 TopicRoutes.post('/addreply', TopicController.addReply)
 
-// TopicRoutes.post('/checkUser', TopicController.checkUser)
+TopicRoutes.post('/attachFile', TopicController.attachFile)
 
-// TopicRoutes.get('/isLogin', TopicController.isLogin)
+TopicRoutes.post('/uploadtocloud', TopicController.uploadToCloud)
 
 module.exports = TopicRoutes

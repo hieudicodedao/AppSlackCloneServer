@@ -6,6 +6,7 @@ const TopicSchema = new mongoose.Schema({
 	content: String,
 	date: String,
 	reply: [String],
+	image: [String],
 })
 
 const TopicModel = mongoose.model('topic', TopicSchema, 'Topic')
