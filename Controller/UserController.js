@@ -2,7 +2,12 @@ const UserModel = require('../Model/UserModel')
 const multer = require('multer')
 const bcrypt = require('bcryptjs')
 var jwt = require('jsonwebtoken')
-
+var cloudinary = require('cloudinary').v2
+cloudinary.config({
+	cloud_name: process.env.CLOUDNAME,
+	api_key: process.env.APIKEY,
+	api_secret: process.env.APISECRET,
+})
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, 'public/image')
@@ -14,13 +19,30 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('file')
 
 module.exports.create = async (req, res) => {
-	const { username, password, img } = req.body
-	var salt = bcrypt.genSaltSync(10)
-	var hashpass = bcrypt.hashSync(password, salt)
-	const newUser = new UserModel({
+	let { username, password, img } = req.body
+	let salt = bcrypt.genSaltSync(10)
+	let hashpass = bcrypt.hashSync(password, salt)
+	let url_image = null
+	try {
+		await cloudinary.uploader.upload(
+			`public/image/${img}`,
+			function (error, result) {
+				if (error)
+					return res.json({
+						err: 'some thing',
+					})
+				url_image = result.secure_url
+			},
+		)
+	} catch (error) {
+		return res.json({
+			err: 'some thing',
+		})
+	}
+	let newUser = new UserModel({
 		username,
 		password: hashpass,
-		img,
+		img: url_image,
 	})
 	newUser.save((error) => {
 		if (error) {
