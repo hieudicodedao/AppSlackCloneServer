@@ -76,13 +76,6 @@ io.on('connection', (socket) => {
 
 	//socket for reply
 
-	// socket.on('update-reply-array', ({ newReply, _id_topic }) => {
-	// 	io.to(socket.channelName)
-	// 		.to(socket.idtopic)
-	// 		.emit('some-one-update-reply-array', { newReply, _id_topic })
-	// })
-	//
-
 	socket.on('disconnect', () => {})
 })
 mongoose

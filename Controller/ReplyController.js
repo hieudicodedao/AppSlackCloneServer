@@ -28,7 +28,7 @@ module.exports.create = async (req, res) => {
 		if (err) return res.json({ err: 'loi' })
 	})
 	io.to(socket.idtopic).emit('some-one-add-reply', newReply)
-
+	
 	return res.json({ newReply })
 }
 
