@@ -50,9 +50,8 @@ const io = require('socket.io')(server, {
 io.on('connection', (socket) => {
 	//socket for channel
 
-	socket.on('add-channel', (newChannel) => {
-		io.emit('some-one-add-channel', newChannel)
-	})
+	app.set('io', io)
+	app.set('socket', socket)
 
 	socket.on('join-channel', (channelName) => {
 		socket.channelName = channelName
@@ -65,10 +64,6 @@ io.on('connection', (socket) => {
 	})
 	//socket for topic
 
-	socket.on('add-topic', (send_topic) => {
-		io.to(socket.channelName).emit('some-one-add-topic', send_topic)
-	})
-
 	socket.on('join-topic', (idtopic) => {
 		socket.idtopic = idtopic
 		socket.join(socket.idtopic)
@@ -80,15 +75,12 @@ io.on('connection', (socket) => {
 	})
 
 	//socket for reply
-	socket.on('add-reply', (newReply) => {
-		io.to(socket.idtopic).emit('some-one-add-reply', newReply)
-	})
 
-	socket.on('update-reply-array', ({ newReply, _id_topic }) => {
-		io.to(socket.channelName)
-			.to(socket.idtopic)
-			.emit('some-one-update-reply-array', { newReply, _id_topic })
-	})
+	// socket.on('update-reply-array', ({ newReply, _id_topic }) => {
+	// 	io.to(socket.channelName)
+	// 		.to(socket.idtopic)
+	// 		.emit('some-one-update-reply-array', { newReply, _id_topic })
+	// })
 	//
 
 	socket.on('disconnect', () => {})

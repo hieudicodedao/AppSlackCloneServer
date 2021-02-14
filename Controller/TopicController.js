@@ -44,6 +44,9 @@ module.exports.uploadToCloud = async (req, res) => {
 	return res.json({ list_image })
 }
 module.exports.create = async (req, res) => {
+	const io = req.app.get('io')
+	const socket = req.app.get('socket')
+
 	const { user, channel, content, list_image } = req.body
 	//image is path to public folder
 	const newTopic = await new TopicModel({
@@ -59,10 +62,13 @@ module.exports.create = async (req, res) => {
 			return res.json({ err: 'loi' })
 		}
 	})
+	io.to(socket.channelName).emit('some-one-add-topic', newTopic)
 	return res.json({ newTopic })
 }
 
 module.exports.addReply = async (req, res) => {
+	const io = req.app.get('io')
+	const socket = req.app.get('socket')
 	// id_reply
 	let { id_reply, _id_topic } = req.body
 	let findtopic = await TopicModel.findOne({ _id: _id_topic })
@@ -73,6 +79,13 @@ module.exports.addReply = async (req, res) => {
 		{ reply: reply },
 	)
 	let updateValue = await TopicModel.findOne({ _id: _id_topic })
+	await io
+		.to(socket.channelName)
+		.to(socket.idtopic)
+		.emit('some-one-update-reply-array', {
+			newReply: updateValue.reply,
+			_id_topic,
+		})
 	return res.json({ reply: updateValue.reply })
 }
 

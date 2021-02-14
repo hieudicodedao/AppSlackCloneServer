@@ -10,6 +10,9 @@ module.exports.getlistreply = async (req, res) => {
 }
 
 module.exports.create = async (req, res) => {
+	const io = req.app.get('io')
+	const socket = req.app.get('socket')
+
 	// username , content , _id_topic
 	const { username, content, _id_topic } = req.body
 
@@ -24,6 +27,7 @@ module.exports.create = async (req, res) => {
 	newReply.save((err) => {
 		if (err) return res.json({ err: 'loi' })
 	})
+	io.to(socket.idtopic).emit('some-one-add-reply', newReply)
 
 	return res.json({ newReply })
 }
